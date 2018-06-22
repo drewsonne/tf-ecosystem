@@ -12,7 +12,7 @@ class ConfigurationFile(object):
     """
 
     def __init__(self):
-        self._config_folder = Path(Path.home(), '.config', 'tf-eco')
+        self._config_folder = Path(Path.home(), '.config', 'tf-ecosystem')
         self._config_file = Path(self._config_folder, 'config.ini')
         self._config = {}
 

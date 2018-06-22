@@ -28,7 +28,8 @@ _*tfvars
                self._tf_config.is_file()
 
     def create_tf_files(self, **cli_args):
-        self._tf_config.chmod(0o666)
+        if self._tf_config.exists():
+            self._tf_config.chmod(0o666)
         with self._tf_config.open('w') as fp:
             composer = self._cfg.composer(**cli_args)
             composer.compose(fp)
