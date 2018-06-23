@@ -60,7 +60,8 @@ variable "stack" {}
                     'role_arn': 'role_arn',
                     'key': 'bucket_key'
                 }
-            }
+            },
+            'providers': {}
         })
 
         mockIO = StringIO()
@@ -93,7 +94,8 @@ variable "stack" {}
                     'foo': 'bar',
                     'hello': 'world'
                 }
-            }
+            },
+            'providers': {}
         })
 
         mockIO = StringIO()
@@ -122,7 +124,8 @@ variable "stack" {}
             'facets': {
                 'state': ['hello', 'world', 'foo', 'bar'],
                 'optional': ['foo', 'bar']
-            }
+            },
+            'providers': {}
         })
 
         mockIO = StringIO()
@@ -163,8 +166,15 @@ variable "world" {}
                     "region": "${var.region}",
                     "skip_get_ec2_platforms": True,
                     "assume_role": {
-                        "role_arn": "arn:aws:iam::${lookup(var.account-names, var.account)}:role/${var.environment}-terraform-provisioner",
-                        "session_name": "${terraform.env}-${replace(var.stack,\" / [ ^\\w\\d -] / \",\"\")}-terraform"
+                        "role_arn": "arn:aws:iam::${lookup("
+                                    "var.account-names, "
+                                    "var.account"
+                                    ")}:role/${var.environment}"
+                                    "-terraform-provisioner",
+                        "session_name": "${terraform.env}-${replace("
+                                        "var.stack,"
+                                        "\"/[^\\w\\d-]/\",\"\")}"
+                                        "-terraform"
                     }
                 }]
             }
@@ -177,14 +187,14 @@ variable "world" {}
         mockIO.seek(0)
 
         self.assertEqual("""provider "aws" {
-    region                 = "${var.region}"
-    skip_get_ec2_platforms = true
-    
-    assume_role {
+    assume_role            = {
         role_arn     = "arn:aws:iam::${lookup(var.account-names, var.account)}:role/${var.environment}-terraform-provisioner"
         session_name = "${terraform.env}-${replace(var.stack,"/[^\\w\\d-]/","")}-terraform"
     }
-}""", mockIO.read())
+    region                 = "${var.region}"
+    skip_get_ec2_platforms = true
+}
+""", mockIO.read())
 
     def test__compose_block(self):
         c = Composer({})
@@ -196,10 +206,10 @@ variable "world" {}
         })
 
         self.assertEqual("""{
-    one   = "foo"
-    two   = "bar"
-    three = "hello"
     four  = "world"
+    one   = "foo"
+    three = "hello"
+    two   = "bar"
 }
 """, block)
 
@@ -218,14 +228,14 @@ variable "world" {}
         })
 
         self.assertEqual("""{
-    one   = "foo"
-    two   = "bar"
-    three = "hello"
     four  = {
-        five  = "world"
-        six   = "the"
-        seven = "world"
         eight = "is"
+        five  = "world"
+        seven = "world"
+        six   = "the"
     }
+    one   = "foo"
+    three = "hello"
+    two   = "bar"
 }
 """, block)

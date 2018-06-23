@@ -38,7 +38,11 @@ class Composer(object):
             else:
                 backend['key'] += '/state.tfstate'
 
-        configuration = [self._build_config_line(kv, 2) for kv in backend.items()]
+        configuration = [
+            self._build_config_line(kv, 2)
+            for kv
+            in backend.items()
+        ]
         configuration.sort()
 
         fp.write("""terraform {{
@@ -91,12 +95,18 @@ class Composer(object):
                 fp.write("\n    default = \"\"\n")
             fp.write("}\n\n")
 
-    def _build_config_line(self, kv, indent=1, padding_width=0):
+    def _build_config_line(self, kv, indent=1, padding_width=1):
         key_padding = '{:' + str(padding_width) + '}'
-        return "{indent}{key} = \"{value}\"".format(
+
+        if type(kv[1]) == bool:
+            key = "true" if kv[1] else "false"
+        else:
+            key = "\"" + kv[1] + "\""
+
+        return "{indent}{key} = {value}".format(
             indent=" " * indent * self.TAB_SPACES,
             key=key_padding.format(kv[0]),
-            value=kv[1]
+            value=key
         )
 
     def _build_block(self, configuration, indent=0):
@@ -109,64 +119,66 @@ class Composer(object):
 
         space_indent = " " * indent * self.TAB_SPACES
         block = "{\n"
-        for key, value in configuration.items():
+        config_keys = list(configuration.keys())
+        config_keys.sort()
+
+        for key in config_keys:
+            value = configuration[key]
             if type(value) == dict:
                 key_padding = '{:' + str(max_key_length) + '}'
-                block += " " * (indent + 1) * self.TAB_SPACES + key_padding.format(key) + ' = '
+                block += " " * (indent + 1) * self.TAB_SPACES
+                block += key_padding.format(key) + ' = '
                 block += self._build_block(value, indent + 1)
             else:
-                block += self._build_config_line([key, value], indent + 1, max_key_length) + "\n"
+                block += self._build_config_line(
+                    [key, value],
+                    indent + 1, max_key_length
+                ) + "\n"
 
         block += space_indent + "}\n"
 
         return block
 
+    def _compose_backends_key(self):
+        if 'facets' not in self._data:
+            return None
 
-def _compose_backends_key(self):
-    if 'facets' not in self._data:
-        return None
+        facets = self._data['facets']
+        if 'state' not in facets:
+            return None
 
-    facets = self._data['facets']
-    if 'state' not in facets:
-        return None
+        state_facets = facets['state']
+        state_facets.sort()
 
-    state_facets = facets['state']
-    state_facets.sort()
+        filtered_state_facets = []
+        for facet in state_facets:
+            if facet in self._facets:
+                value = self._facets[facet]
+                if value != "":
+                    filtered_state_facets.append(facet + '=' + value)
 
-    filtered_state_facets = []
-    for facet in state_facets:
-        if facet in self._facets:
-            value = self._facets[facet]
-            if value != "":
-                filtered_state_facets.append(facet + '=' + value)
+        if len(filtered_state_facets) == 0:
+            return None
 
-    if len(filtered_state_facets) == 0:
-        return None
+        return '/'.join(filtered_state_facets)
 
-    return '/'.join(filtered_state_facets)
+    def _compose_providers(self, fp):
+        if 'providers' not in self._data:
+            raise Exception("Missing Providers")
 
+        providers = self._data['providers']
+        provider_names = list(providers.keys())
+        provider_names.sort()
 
-def _compose_providers(self, fp):
-    if 'providers' not in self._data:
-        raise Exception("Missing Providers")
+        for name in provider_names:
+            configurations = providers[name]
+            for provider_instance in configurations:
+                self._compose_provider(name, provider_instance, fp)
 
-    providers = self._data['providers']
-    provider_names = list(providers.keys())
-    provider_names.sort()
+    def _compose_provider(self, name, provider_instance, fp):
+        fp.write("provider \"" + name + "\" ")
 
-    for name in provider_names:
-        configurations = providers[name]
-        for provider_instance in configurations:
-            self._compose_provider(name, provider_instance, fp)
+        config_keys = list(provider_instance.keys())
+        config_keys.sort()
 
-
-def _compose_provider(self, name, provider_instance, fp):
-    fp.write("provider \"" + name + "\" {\n")
-
-    config_keys = list(provider_instance.keys())
-    config_keys.sort()
-
-    for key in config_keys:
-        fp.write(self._build_config_line([key, provider_instance[key]], 1) + "\n")
-
-    fp.write("}\n\n")
+        fp.write(self._build_block(provider_instance, 0))

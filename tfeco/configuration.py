@@ -76,8 +76,6 @@ class ConfigurationFile(object):
                     }
                 },
                 'providers': {
-                    'aws': [{
-
-                    }]
+                    'aws': []
                 }
             }
