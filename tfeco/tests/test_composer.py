@@ -155,3 +155,77 @@ variable "world" {}
         key_path = c._compose_backends_key()
 
         self.assertEqual(key_path, 'test_key=mock')
+
+    def test__compose_providers(self):
+        c = Composer({
+            'providers': {
+                'aws': [{
+                    "region": "${var.region}",
+                    "skip_get_ec2_platforms": True,
+                    "assume_role": {
+                        "role_arn": "arn:aws:iam::${lookup(var.account-names, var.account)}:role/${var.environment}-terraform-provisioner",
+                        "session_name": "${terraform.env}-${replace(var.stack,\" / [ ^\\w\\d -] / \",\"\")}-terraform"
+                    }
+                }]
+            }
+        })
+
+        mockIO = StringIO()
+
+        c.compose(mockIO)
+
+        mockIO.seek(0)
+
+        self.assertEqual("""provider "aws" {
+    region                 = "${var.region}"
+    skip_get_ec2_platforms = true
+    
+    assume_role {
+        role_arn     = "arn:aws:iam::${lookup(var.account-names, var.account)}:role/${var.environment}-terraform-provisioner"
+        session_name = "${terraform.env}-${replace(var.stack,"/[^\\w\\d-]/","")}-terraform"
+    }
+}""", mockIO.read())
+
+    def test__compose_block(self):
+        c = Composer({})
+        block = c._build_block({
+            'one': 'foo',
+            'two': 'bar',
+            'three': 'hello',
+            'four': 'world'
+        })
+
+        self.assertEqual("""{
+    one   = "foo"
+    two   = "bar"
+    three = "hello"
+    four  = "world"
+}
+""", block)
+
+    def test__compose_block_dict(self):
+        c = Composer({})
+        block = c._build_block({
+            'one': 'foo',
+            'two': 'bar',
+            'three': 'hello',
+            'four': {
+                'five': 'world',
+                'six': 'the',
+                'seven': 'world',
+                'eight': 'is'
+            }
+        })
+
+        self.assertEqual("""{
+    one   = "foo"
+    two   = "bar"
+    three = "hello"
+    four  = {
+        five  = "world"
+        six   = "the"
+        seven = "world"
+        eight = "is"
+    }
+}
+""", block)
