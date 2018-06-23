@@ -1,6 +1,6 @@
-/eco.egg-info
 /.pytest_cache
 /.env
-*.pyc
-
+/.direnv
 /test
+*.pyc
+*.egg-info
