@@ -9,7 +9,8 @@ matrix:
 install:
   - pip install flake8 codecov
 before_script:
-  - flake8 .
+  - flake8 --exclude=test_* setup.py
+  - flake8 --exclude=test_* tfeco/
 script: python setup.py nosetests
 after_success:
   - codecov
