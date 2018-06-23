@@ -4,3 +4,5 @@
 /test
 *.pyc
 *.egg-info
+/.tox
+/.eggs

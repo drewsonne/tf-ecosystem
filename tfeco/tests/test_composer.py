@@ -1,5 +1,6 @@
-from io import StringIO
 from unittest import TestCase
+
+from io import StringIO
 
 from tfeco.composer import Composer
 from tfeco.configuration import ConfigurationFile
@@ -20,20 +21,19 @@ class TestComposer(TestCase):
 
         self.assertEqual("""terraform {
     backend "s3" {
-        bucket = "my-bucket"
-        region = "bucket_region"
         acl = "bucket_acl"
+        bucket = "my-bucket"
         dynamodb_table = "dynammodb_table"
+        region = "bucket_region"
         role_arn = "role_arn"
-        key = "bucket_key"
     }
 }
 
 locals {
     account-names = {
-        test = "012345678901"
-        stage = "234567890123"
         live = "456789012345"
+        stage = "234567890123"
+        test = "012345678901"
     }
 }
 
@@ -41,9 +41,9 @@ variable "account" {
     default = ""
 }
 
-variable "region" {}
-
 variable "environment" {}
+
+variable "region" {}
 
 variable "stack" {}
 
@@ -71,12 +71,11 @@ variable "stack" {}
 
         self.assertEqual("""terraform {
     backend "s3" {
-        bucket = "my-bucket"
-        region = "bucket_region"
         acl = "bucket_acl"
+        bucket = "my-bucket"
         dynamodb_table = "dynammodb_table"
+        region = "bucket_region"
         role_arn = "role_arn"
-        key = "bucket_key"
     }
 }
 
@@ -105,9 +104,9 @@ variable "stack" {}
 
         self.assertEqual("""locals {
     account-names = {
-        test = "012345678901"
-        stage = "234567890123"
         live = "456789012345"
+        stage = "234567890123"
+        test = "012345678901"
     }
 
     randoms = {
@@ -132,17 +131,17 @@ variable "stack" {}
 
         mockIO.seek(0)
 
-        self.assertEqual("""variable "hello" {}
-
-variable "world" {}
+        self.assertEqual("""variable "bar" {
+    default = ""
+}
 
 variable "foo" {
     default = ""
 }
 
-variable "bar" {
-    default = ""
-}
+variable "hello" {}
+
+variable "world" {}
 
 """, mockIO.read())
 
@@ -153,6 +152,6 @@ variable "bar" {
             },
         }, test_key='mock')
 
-        key_path = c._compose_backends_key(None)
+        key_path = c._compose_backends_key()
 
         self.assertEqual(key_path, 'test_key=mock')

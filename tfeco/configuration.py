@@ -4,6 +4,7 @@ import pyaml
 import yaml
 
 from tfeco.composer import Composer
+from tfeco.configuration_schema import ConfigSchema
 
 
 class ConfigurationFile(object):
@@ -25,6 +26,7 @@ class ConfigurationFile(object):
         if self._config_file.exists():
             with self._config_file.open('r') as fp:
                 self._config = yaml.load(fp, Loader=yaml.CLoader)
+                ConfigSchema().load(self._config)
 
         return self
 
@@ -54,9 +56,7 @@ class ConfigurationFile(object):
                         'environment',
                         'stack'
                     ],
-                    'optional': [
-                        'account'
-                    ]
+                    'optional': ['account']
                 },
                 'backend': {
                     's3': {

@@ -12,6 +12,7 @@ setup(
     packages=find_packages(),
     keywords='terraform cli',
     install_requires=[
+        'marshmallow',
         'click',
         'pyaml',
         'termcolor'
@@ -19,7 +20,8 @@ setup(
     classifiers=[
         'Development Status :: 4 - Beta',
         'Environment :: Console',
-        'License :: OSI Approved :: GNU Lesser General Public License v3 or later (LGPLv3+)',
+        'License :: OSI Approved :: '
+        'GNU Lesser General Public License v3 or later (LGPLv3+)',
         'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3 :: Only',

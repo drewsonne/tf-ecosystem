@@ -1,11 +1,9 @@
 import os
 from pathlib import Path
 
-from tfeco.configuration import ConfigurationFile
-
 
 class WorkingDirectory(object):
-    def __init__(self, cfg: ConfigurationFile):
+    def __init__(self, cfg):
         self._cfg = cfg
 
         self._cwd = Path(os.getcwd())
