@@ -7,10 +7,10 @@ matrix:
   allow_failures:
     - python: "3.7-dev"
 install:
-  - pip install flake8 codecov
+  - pip install flake8 codecov tox-travis
 before_script:
   - flake8 --exclude=test_* setup.py
   - flake8 --exclude=test_* tfeco/
-script: python setup.py nosetests
+script: tox
 after_success:
   - codecov
