@@ -255,7 +255,9 @@ variable "world" {}
             },
             'facets': {
                 'state': ['env', 'comp_stack'],
-                'composite': {"comp_stack": ['stack', 'substack']}
+                'composite': {
+                    "comp_stack": ['stack', 'substack']
+                }
             }
         }, env='live', stack='mock_stack', substack='mock_substack')
 
