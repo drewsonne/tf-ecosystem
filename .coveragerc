@@ -1,0 +1,7 @@
+[paths]
+source =
+    tfeco/*.py
+
+[run]
+omit =
+    */tests/*
