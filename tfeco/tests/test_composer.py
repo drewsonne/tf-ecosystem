@@ -56,7 +56,7 @@ variable "stack" {}
                     'bucket': 'my-bucket',
                     'region': 'bucket_region',
                     'acl': 'bucket_acl',
-                    'dynamodb_table': 'dynammodb_table',
+                    'dynamodb_table': 'dynamodb_table',
                     'role_arn': 'role_arn',
                     'key': 'bucket_key'
                 }
@@ -74,7 +74,7 @@ variable "stack" {}
     backend "s3" {
         acl            = "bucket_acl"
         bucket         = "my-bucket"
-        dynamodb_table = "dynammodb_table"
+        dynamodb_table = "dynamodb_table"
         region         = "bucket_region"
         role_arn       = "role_arn"
     }
@@ -242,4 +242,50 @@ variable "world" {}
 """, block)
 
     def test__composite_facet(self):
-        c = Composer({})
+        c = Composer({
+            'backend': {
+                's3': {
+                    'bucket': 'my-bucket',
+                    'region': 'us-east-1',
+                    'acl': 'bucket_acl',
+                    'dynamodb_table': 'dynamodb_table',
+                    'role_arn': 'role_arn',
+                    'key': 'bucket_key'
+                }
+            },
+            'facets': {
+                'state': ['env', 'comp_stack'],
+                'composite': {"comp_stack": ['stack', 'substack']}
+            }
+        }, env='live', stack='mock_stack', substack='mock_substack')
+
+        mockIO = StringIO()
+
+        c.compose(mockIO)
+
+        mockIO.seek(0)
+
+        self.assertEqual("""terraform {
+    backend "s3" {
+        acl            = "bucket_acl"
+        bucket         = "my-bucket"
+        dynamodb_table = "dynamodb_table"
+        key            = "env=live/comp_stack=mock_stack/mock_substack/state.tfstate"
+        region         = "us-east-1"
+        role_arn       = "role_arn"
+    }
+}
+
+variable "env" {
+    default = "live"
+}
+
+variable "stack" {
+    default = "mock_stack"
+}
+
+variable "substack" {
+    default = "mock_substack"
+}
+
+""", mockIO.read())

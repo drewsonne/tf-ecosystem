@@ -66,6 +66,14 @@ class Composer(object):
             'optional': []
         }
         state_facets = facets['state'] if 'state' in facets else []
+
+        if 'composite' in facets:
+            for composite_key, composite_parts in facets['composite'].items():
+                # state_facets.remove(composite_key)
+                for part in composite_parts:
+                    state_facets.append(part)
+        state_facets = list(set(state_facets))
+
         state_facets.sort()
         optional_facets = facets['optional'] if 'optional' in facets else []
         optional_facets.sort()
@@ -129,19 +137,36 @@ class Composer(object):
         }
 
         state_facets = facets['state']
-        state_facets.sort()
+
+        ignore_facets = []
+
+        composite_state_facets = []
+        if 'composite' in facets:
+            for composite_key, composite_parts in facets['composite'].items():
+                state_facets.remove(composite_key)
+                component_values = []
+                for part in composite_parts:
+                    ignore_facets.append(part)
+                    state_facets.append(part)
+                    component_values.append(self._facets[part])
+                composite_state_facets.append(
+                    composite_key + '=' + '/'.join(component_values)
+                )
 
         filtered_state_facets = []
         for facet in state_facets:
             if facet in self._facets:
-                value = self._facets[facet]
-                if value != "":
-                    filtered_state_facets.append(facet + '=' + value)
+                if facet not in ignore_facets:
+                    value = self._facets[facet]
+                    if value != "":
+                        filtered_state_facets.append(facet + '=' + value)
 
         if len(filtered_state_facets) == 0:
             return None
 
-        return '/'.join(filtered_state_facets)
+        filtered_state_facets.sort()
+
+        return '/'.join(filtered_state_facets + composite_state_facets)
 
     def _compose_providers(self, fp):
         providers = self._data['providers'] \
