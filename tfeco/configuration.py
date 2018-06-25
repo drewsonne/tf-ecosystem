@@ -63,7 +63,7 @@ class ConfigurationFile(object):
                         'bucket': 'my-bucket',
                         'region': 'us-east-1',
                         'acl': 'bucket_acl',
-                        'dynamodb_table': 'dynammodb_table',
+                        'dynamodb_table': 'dynamodb_table',
                         'role_arn': 'role_arn',
                         'key': 'bucket_key'
                     }

@@ -16,9 +16,6 @@ class Composer(object):
 
         ConfigSchema().load(self._data)
 
-    def set_data(self, data):
-        self._data = data
-
     def compose(self, fp):
         self._compose_backends(fp)
         self._compose_mappings(fp)

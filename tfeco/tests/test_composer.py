@@ -23,7 +23,7 @@ class TestComposer(TestCase):
     backend "s3" {
         acl            = "bucket_acl"
         bucket         = "my-bucket"
-        dynamodb_table = "dynammodb_table"
+        dynamodb_table = "dynamodb_table"
         region         = "us-east-1"
         role_arn       = "role_arn"
     }
@@ -240,3 +240,6 @@ variable "world" {}
     two   = "bar"
 }
 """, block)
+
+    def test__composite_facet(self):
+        c = Composer({})
