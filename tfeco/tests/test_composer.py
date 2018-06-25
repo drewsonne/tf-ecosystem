@@ -21,19 +21,19 @@ class TestComposer(TestCase):
 
         self.assertEqual("""terraform {
     backend "s3" {
-        acl = "bucket_acl"
-        bucket = "my-bucket"
+        acl            = "bucket_acl"
+        bucket         = "my-bucket"
         dynamodb_table = "dynammodb_table"
-        region = "bucket_region"
-        role_arn = "role_arn"
+        region         = "us-east-1"
+        role_arn       = "role_arn"
     }
 }
 
 locals {
     account-names = {
-        live = "456789012345"
+        live  = "456789012345"
         stage = "234567890123"
-        test = "012345678901"
+        test  = "012345678901"
     }
 }
 
@@ -72,11 +72,11 @@ variable "stack" {}
 
         self.assertEqual("""terraform {
     backend "s3" {
-        acl = "bucket_acl"
-        bucket = "my-bucket"
+        acl            = "bucket_acl"
+        bucket         = "my-bucket"
         dynamodb_table = "dynammodb_table"
-        region = "bucket_region"
-        role_arn = "role_arn"
+        region         = "bucket_region"
+        role_arn       = "role_arn"
     }
 }
 
@@ -106,13 +106,13 @@ variable "stack" {}
 
         self.assertEqual("""locals {
     account-names = {
-        live = "456789012345"
+        live  = "456789012345"
         stage = "234567890123"
-        test = "012345678901"
+        test  = "012345678901"
     }
 
     randoms = {
-        foo = "bar"
+        foo   = "bar"
         hello = "world"
     }
 }
@@ -194,6 +194,7 @@ variable "world" {}
     region                 = "${var.region}"
     skip_get_ec2_platforms = true
 }
+
 """, mockIO.read())
 
     def test__compose_block(self):

@@ -61,7 +61,7 @@ class ConfigurationFile(object):
                 'backend': {
                     's3': {
                         'bucket': 'my-bucket',
-                        'region': 'bucket_region',
+                        'region': 'us-east-1',
                         'acl': 'bucket_acl',
                         'dynamodb_table': 'dynammodb_table',
                         'role_arn': 'role_arn',

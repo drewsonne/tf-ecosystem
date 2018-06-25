@@ -38,53 +38,39 @@ class Composer(object):
             else:
                 backend['key'] += '/state.tfstate'
 
-        configuration = [
-            self._build_config_line(kv, 2)
-            for kv
-            in backend.items()
-        ]
-        configuration.sort()
-
-        fp.write("""terraform {{
-    backend "{backend_type}" {{
-{items}
-    }}
-}}""".format(
-            backend_type=backend_type,
-            items="\n".join(configuration)
-        ))
+        fp.write(
+            """terraform {{\n    backend "{btype}" {items}}}""".format(
+                btype=backend_type,
+                items=self._build_block(backend, 1)
+            ))
         fp.write("\n\n")
 
     def _compose_mappings(self, fp):
-        if 'mappings' not in self._data:
-            return
-        self._compose_locals(self._data['mappings'], fp)
+        mappings = self._data['mappings'] if 'mappings' in self._data else {}
+        self._compose_locals(mappings, fp)
 
     def _compose_locals(self, locals, fp):
-        fp.write("locals {\n")
-        mappings = []
         keys = list(locals.keys())
-        keys.sort()
-        for key in keys:
-            local_entries = [
-                self._build_config_line(kv, 2) for kv in locals[key].items()
-            ]
-            local_entries.sort()
-            mappings.append("""    {name} = {{
-{keys}
-    }}""".format(
-                name=key,
-                keys="\n".join(local_entries)
-            ))
-        fp.write("\n\n".join(mappings))
-        fp.write("\n}\n\n")
+        if len(keys):
+            fp.write("locals {\n")
+            mappings = []
+            keys.sort()
+            for key in keys:
+                mappings.append("""    {name} = {keys}""".format(
+                    name=key,
+                    keys=self._build_block(locals[key], 1)
+                ))
+            fp.write("\n".join(mappings))
+            fp.write("}\n\n")
 
     def _compose_facets(self, fp):
-        if 'facets' not in self._data:
-            return
-        state_facets = self._data['facets']['state']
+        facets = self._data['facets'] if 'facets' in self._data else {
+            'state': [],
+            'optional': []
+        }
+        state_facets = facets['state'] if 'state' in facets else []
         state_facets.sort()
-        optional_facets = self._data['facets']['optional']
+        optional_facets = facets['optional'] if 'optional' in facets else []
         optional_facets.sort()
 
         for facet in state_facets:
@@ -101,7 +87,7 @@ class Composer(object):
         if type(kv[1]) == bool:
             key = "true" if kv[1] else "false"
         else:
-            key = "\"" + kv[1] + "\""
+            key = "\"" + str(kv[1]) + "\""
 
         return "{indent}{key} = {value}".format(
             indent=" " * indent * self.TAB_SPACES,
@@ -140,12 +126,10 @@ class Composer(object):
         return block
 
     def _compose_backends_key(self):
-        if 'facets' not in self._data:
-            return None
 
-        facets = self._data['facets']
-        if 'state' not in facets:
-            return None
+        facets = self._data['facets'] if 'facets' in self._data else {
+            'state': []
+        }
 
         state_facets = facets['state']
         state_facets.sort()
@@ -163,10 +147,7 @@ class Composer(object):
         return '/'.join(filtered_state_facets)
 
     def _compose_providers(self, fp):
-        if 'providers' not in self._data:
-            raise Exception("Missing Providers")
-
-        providers = self._data['providers']
+        providers = self._data['providers'] if 'providers' in self._data else {}
         provider_names = list(providers.keys())
         provider_names.sort()
 
@@ -174,6 +155,7 @@ class Composer(object):
             configurations = providers[name]
             for provider_instance in configurations:
                 self._compose_provider(name, provider_instance, fp)
+                # fp.write("\n\n")
 
     def _compose_provider(self, name, provider_instance, fp):
         fp.write("provider \"" + name + "\" ")
@@ -181,4 +163,4 @@ class Composer(object):
         config_keys = list(provider_instance.keys())
         config_keys.sort()
 
-        fp.write(self._build_block(provider_instance, 0))
+        fp.write(self._build_block(provider_instance, 0) + "\n")
