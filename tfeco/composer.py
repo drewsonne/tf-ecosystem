@@ -147,7 +147,9 @@ class Composer(object):
         return '/'.join(filtered_state_facets)
 
     def _compose_providers(self, fp):
-        providers = self._data['providers'] if 'providers' in self._data else {}
+        providers = self._data['providers'] \
+            if 'providers' in self._data \
+            else {}
         provider_names = list(providers.keys())
         provider_names.sort()
 
