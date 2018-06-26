@@ -143,7 +143,8 @@ class Composer(object):
         composite_state_facets = []
         if 'composite' in facets:
             for composite_key, composite_parts in facets['composite'].items():
-                state_facets.remove(composite_key)
+                if composite_key in state_facets:
+                    state_facets.remove(composite_key)
                 component_values = []
                 for part in composite_parts:
                     ignore_facets.append(part)
