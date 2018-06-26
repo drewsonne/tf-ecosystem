@@ -1,13 +1,22 @@
 language: python
 python:
-  - "3.5"
-  - "3.6"
-  - "3.7-dev"
+- '3.5'
+- '3.6'
+- 3.7-dev
 matrix:
   allow_failures:
-    - python: "3.7-dev"
+  - python: 3.7-dev
 install:
-  - pip install flake8 codecov tox-travis
+- pip install flake8 codecov tox-travis
 script: tox
 after_success:
-  - codecov
+- codecov
+deploy:
+  provider: pypi
+  user: drewsonne
+  password: $PYPI_PASSWORD
+  on:
+    tags: true
+env:
+  global:
+    secure: qjk35aHnGmNecrPfjnCkZKRGi9m0lwP11YZ+IDtmjjXALCDr4Lrwj6+iAX+RwJ4HvPmK8+kc2D7YfNHz1MYIz0796K8wwAtN2v0J+Q3uB8LVWX8ZafYZjWPDKoK0p+GfIyD8F4PADLh4eFkp/rWkrMrNunricVhN8Gj+zmPiS+jSp5OIrbKiIy66AIWflAr4Kugkk69Il76nUTb2DphqigVgS0Rdnf+lV+bBnP/tAbZi7scX9/73/INDwhsj3b0QpxI01z+lExwDfyWb78DIPCQvgRXJH0RIdIdVomO16rm3PYN0EpYaIECjsGCMGGnW0Qds5Q/n09wshCA587eFhoUudffu6YTEnMAw4LPRFBWGf3QD/GK/+gYNIqd6FV60A9lfUo0BgpDm4bqo00deRmEQYfu7XhIAMcYJxZyibuW1kHc44Q4P4XBT1Vsr1shCejdj+BftJNcgZOd59ttAxf90xsL7pz/ol5FALZM7aWf0zjAtSD7tgXDUfGe1NC3B+sJbFnIwNB4gpmoR16xd2uFErBYiTv56NNS16521JpF5flyL+9fZoiW1lPUx0VBFwbEgzgxFX32l3yFMVwPHiFkim1P2vmAWwy02u/oSgC3LXZHcyZEMovAdgTuWeGd95ulj/vJhVAqjPFKWpvKuVZW2Ubz8w7OVaAFs2GfefSI=
