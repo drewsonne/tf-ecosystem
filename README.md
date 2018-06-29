@@ -6,9 +6,7 @@ A tool for handling terraform deployments in a modular way
 
 ## Quickstart
 
-    $ git clone https://github.com/drewsonne/tf-ecosystem.git
-    $ cd tf-ecosystem
-    $ pip install -e .
+    $ pip install tf-ecosystem
     $ tf-eco init-stack --region eu-central-1 --environment live --stack help
     $ cat ~/.config/tf-ecosystem/config.ini
     $ cat _eco_override.tf
@@ -26,7 +24,6 @@ A list of facets strings
 A subset of `facets.state` marking those facets as optional.
 
 #### `facets.composite`
-
 
 ### `backend`
 
