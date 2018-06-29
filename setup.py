@@ -12,7 +12,7 @@ setup(
     long_description_content_type="text/markdown",
     python_requires='>=3',
     version='1.0.3',
-    url='http://github.com/drewsonne/eco',
+    url='http://github.com/drewsonne/tf-ecosystem',
     license='LGPLv2',
     include_package_data=True,
     packages=find_packages(),
