@@ -10,7 +10,7 @@ setup(
     description='A framework for initialising a terraform environment',
     long_description=long_description,
     long_description_content_type="text/markdown",
-    version='1.0.0',
+    version='1.0.3',
     url='http://github.com/drewsonne/eco',
     license='LGPLv2',
     include_package_data=True,
