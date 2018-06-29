@@ -1,10 +1,15 @@
 from setuptools import find_packages, setup
 
+with open("README.md", "r") as fh:
+    long_description = fh.read()
+
 setup(
     name='tf-ecosystem',
     author='Drew J. Sonne',
     author_email='drew.sonne@gmail.com',
     description='A framework for initialising a terraform environment',
+    long_description=long_description,
+    long_description_content_type="text/markdown",
     version='1.0.0',
     url='http://github.com/drewsonne/eco',
     license='LGPLv2',
