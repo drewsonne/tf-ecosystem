@@ -17,7 +17,7 @@ A tool for handling terraform deployments in a modular way
 
 ### `facets`
 
-Facets are variables used as required arguments and to descibe the state path in an s3 backend.
+Facets are variables used as required arguments and to describe the state path in an s3 backend.
 
 #### `facets.state`
 A list of facets strings
@@ -26,6 +26,7 @@ A list of facets strings
 A subset of `facets.state` marking those facets as optional.
 
 #### `facets.composite`
+
 
 ### `backend`
 
