@@ -11,7 +11,7 @@ setup(
     long_description=long_description,
     long_description_content_type="text/markdown",
     python_requires='>=3',
-    version='1.0.4',
+    version='1.0.5',
     url='http://github.com/drewsonne/tf-ecosystem',
     license='LGPLv2',
     include_package_data=True,
