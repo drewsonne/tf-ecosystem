@@ -17,7 +17,7 @@ class ConfigurationFile(object):
         self._config_file = Path(self._config_folder, 'config.ini')
         self._config = {}
 
-    def load(self):
+    def load(self) -> 'ConfigurationFile':
         if not self._config_folder.exists():
             self._config_folder.mkdir()
 
@@ -30,7 +30,7 @@ class ConfigurationFile(object):
 
         return self
 
-    def save(self):
+    def save(self) -> 'ConfigurationFile':
         with self._config_file.open('w') as fp:
             pyaml.dump(self._config, fp)
 
@@ -43,7 +43,7 @@ class ConfigurationFile(object):
         for state in states:
             yield state, state in optional
 
-    def composer(self, **facets):
+    def composer(self, **facets) -> Composer:
         return Composer(self._config, **facets)
 
     def _init_defaults(self):
