@@ -6,3 +6,6 @@
 *.egg-info
 /.tox
 /.eggs
+/.terraform
+/_eco_override.tf
+/.idea
