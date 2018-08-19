@@ -7,6 +7,7 @@ cfg = ConfigurationFile().load().save()
 
 
 @click.group()
+@click.version_option()
 # @click.option('--debug/--no-debug', default=False)
 def cli():
     """tf-eco"""

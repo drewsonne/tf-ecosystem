@@ -25,11 +25,10 @@ class Composer(object):
     def compose_env(self, fp):
         if self._data['facets']:
             if self._data['facets']['environment']:
-                fp.write(
-                    self._facets[
-                        self._data['facets']['environment']
-                    ]
-                )
+                value = self._facets[
+                    self._data['facets']['environment']
+                ]
+                fp.write(value)
 
     def _compose_backends(self, fp):
         if 'backend' not in self._data:
