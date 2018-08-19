@@ -1,7 +1,7 @@
 # tf-ecosystem
 A tool for handling terraform deployments in a modular way
 
-[![Build Status](https://travis-ci.com/drewsonne/tf-ecosystem.svg?branch=master)](https://travis-ci.com/drewsonne/tf-ecosystem)
+[![Build Status](https://travis-ci.org/drewsonne/tf-ecosystem.svg?branch=master)](https://travis-ci.org/drewsonne/tf-ecosystem)
 [![codecov](https://codecov.io/gh/drewsonne/tf-ecosystem/branch/master/graph/badge.svg)](https://codecov.io/gh/drewsonne/tf-ecosystem)
 
 ## Quickstart
