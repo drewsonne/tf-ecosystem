@@ -9,3 +9,5 @@
 /.terraform
 /_eco_override.tf
 /.idea
+/build
+/dist

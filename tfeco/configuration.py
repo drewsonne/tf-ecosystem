@@ -3,6 +3,11 @@ from pathlib import Path
 import pyaml
 import yaml
 
+try:
+    from yaml import CLoader as Loader, CDumper as Dumper
+except ImportError:
+    from yaml import Loader, Dumper
+
 from tfeco.composer import Composer
 from tfeco.configuration_schema import ConfigSchema
 
@@ -25,7 +30,7 @@ class ConfigurationFile(object):
 
         if self._config_file.exists():
             with self._config_file.open('r') as fp:
-                self._config = yaml.load(fp, Loader=yaml.CLoader)
+                self._config = yaml.load(fp, Loader=Loader)
                 ConfigSchema().load(self._config)
 
         return self
